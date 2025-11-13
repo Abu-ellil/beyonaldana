@@ -28,3 +28,24 @@ export async function createEvent(data: EventItem) {
   const res = await db.collection<EventItem>("events").insertOne(safe);
   return res.insertedId.toString();
 }
+
+export async function updateEvent(id: string, data: Partial<EventItem>) {
+  const db = await getDb();
+  const updateData: Record<string, string | undefined> = {};
+  if (data.name) updateData.name = data.name.trim();
+  if (data.image) updateData.image = data.image.trim();
+  if (data.date) updateData.date = new Date(data.date).toISOString();
+  if (data.link !== undefined) updateData.link = data.link?.trim() || undefined;
+
+  const res = await db.collection("events").updateOne(
+    { _id: new ObjectId(id) },
+    { $set: updateData }
+  );
+  return res.modifiedCount > 0;
+}
+
+export async function deleteEvent(id: string) {
+  const db = await getDb();
+  const res = await db.collection("events").deleteOne({ _id: new ObjectId(id) });
+  return res.deletedCount > 0;
+}

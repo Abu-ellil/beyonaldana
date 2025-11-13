@@ -2,6 +2,7 @@ import { getEvents } from "@/lib/events";
 import SlideshowCarousel from "@/components/SlideshowCarousel";
 import FooterSidebar from "@/components/FooterSidebar";
 import SubscriptionForm from "@/components/forms/SubscriptionForm";
+import Footer from "@/components/Footer";
 
 export default async function Home() {
   const events = await getEvents();
@@ -68,6 +69,7 @@ export default async function Home() {
       <SlideshowCarousel />
       <SubscriptionForm/>
       <FooterSidebar/>
+      <Footer/>
     </div>
   );
 }

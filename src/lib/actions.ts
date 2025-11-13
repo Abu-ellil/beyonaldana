@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { createEvent } from "./events";
+import { createEvent, updateEvent, deleteEvent } from "./events";
 import { getDb } from "./mongodb";
 
 export async function adminLogin(formData: FormData) {
@@ -39,6 +39,49 @@ export async function addEvent(formData: FormData) {
   }
 
   await createEvent({ name, image, date, link });
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
+
+export async function editEvent(formData: FormData) {
+  const cookieStore = await cookies();
+  const isAdmin = cookieStore.get("admin")?.value === "true";
+  if (!isAdmin) {
+    console.error("Unauthorized");
+    return;
+  }
+
+  const id = formData.get("id")?.toString() || "";
+  const name = formData.get("name")?.toString() || "";
+  const image = formData.get("image")?.toString() || "";
+  const date = formData.get("date")?.toString() || "";
+  const link = formData.get("link")?.toString() || undefined;
+
+  if (!id || !name || !image || !date) {
+    console.error("ID, name, image and date are required");
+    return;
+  }
+
+  await updateEvent(id, { name, image, date, link });
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
+
+export async function removeEvent(formData: FormData) {
+  const cookieStore = await cookies();
+  const isAdmin = cookieStore.get("admin")?.value === "true";
+  if (!isAdmin) {
+    console.error("Unauthorized");
+    return;
+  }
+
+  const id = formData.get("id")?.toString() || "";
+  if (!id) {
+    console.error("ID is required");
+    return;
+  }
+
+  await deleteEvent(id);
   revalidatePath("/");
   revalidatePath("/admin");
 }
