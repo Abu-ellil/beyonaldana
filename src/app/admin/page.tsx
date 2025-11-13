@@ -1,6 +1,7 @@
-import { adminLogin, addEvent, editEvent, removeEvent } from "@/lib/actions";
+import { adminLogin, addEvent, removeEvent } from "@/lib/actions";
 import { getEvents } from "@/lib/events";
 import { cookies } from "next/headers";
+import EditEventForm from "@/components/EditEventForm";
 
 export default async function AdminPage() {
   const cookieStore = await cookies();
@@ -70,22 +71,14 @@ export default async function AdminPage() {
                     <div className="flex-1 mb-4 sm:mb-0">
                       <h3 className="font-semibold text-slate-900">{event.name}</h3>
                       <p className="text-sm text-slate-600">Date: {new Date(event.date).toLocaleDateString()}</p>
-                      <p className="text-sm text-slate-600">Image: {event.image}</p>
+                      <div className="text-sm text-slate-600 mb-2">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={event.image} alt={event.name} className="w-16 h-16 object-cover rounded" />
+                      </div>
                       {event.link && <p className="text-sm text-slate-600">Link: {event.link}</p>}
                     </div>
                     <div className="w-full sm:w-auto">
-                      <form action={editEvent} className="space-y-2 sm:space-y-0 sm:flex sm:flex-wrap sm:items-center sm:gap-2 mb-2">
-                        <input type="hidden" name="id" value={event._id} />
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                          <input name="name" defaultValue={event.name} className="border rounded px-2 py-1 text-sm flex-1 text-slate-900" placeholder="Name" required />
-                          <input name="image" defaultValue={event.image} className="border rounded px-2 py-1 text-sm flex-1 text-slate-900" placeholder="Image URL" required />
-                        </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                          <input type="date" name="date" defaultValue={event.date.split('T')[0]} className="border rounded px-2 py-1 text-sm flex-1 text-slate-900" required />
-                          <input name="link" defaultValue={event.link || ''} className="border rounded px-2 py-1 text-sm flex-1 text-slate-900" placeholder="Ticket Link" />
-                        </div>
-                        <button type="submit" className="bg-green-600 text-white px-3 py-1 rounded text-sm w-full sm:w-auto">Update</button>
-                      </form>
+                      <EditEventForm event={event} />
                       <form action={removeEvent}>
                         <input type="hidden" name="id" value={event._id} />
                         <button type="submit" className="bg-red-600 text-white px-3 py-1 rounded text-sm w-full sm:w-auto">Delete</button>

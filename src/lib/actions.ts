@@ -69,6 +69,31 @@ export async function addEvent(formData: FormData) {
   revalidatePath("/admin");
 }
 
+export async function uploadImage(formData: FormData) {
+  const imageFile = formData.get("image") as File | null;
+  if (!imageFile || imageFile.size === 0) {
+    throw new Error("No image file provided");
+  }
+
+  try {
+    const arrayBuffer = await imageFile.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const uploadResult = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { resource_type: 'image' },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(buffer);
+    });
+    return (uploadResult as { secure_url: string }).secure_url;
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    throw new Error("Failed to upload image");
+  }
+}
+
 export async function editEvent(formData: FormData) {
   const cookieStore = await cookies();
   const isAdmin = cookieStore.get("admin")?.value === "true";
@@ -79,7 +104,7 @@ export async function editEvent(formData: FormData) {
 
   const id = formData.get("id")?.toString() || "";
   const name = formData.get("name")?.toString() || "";
-  const image = formData.get("image")?.toString() || "";
+  const image = formData.get("imageUrl")?.toString() || "";
   const date = formData.get("date")?.toString() || "";
   const link = formData.get("link")?.toString() || undefined;
 
