@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'TitlingGothicBlack';
+  src: url('/fonts/TitlingGothicFBSky-Black-AF65ddb136747bf.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TitlingGothicBold';
+  src: url('/fonts/TitlingGothicFBSky-Bold-AF65ddb1366ead2.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Titling Gothic FB Compressed",Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'TitlingGothicBlack', Arial, Helvetica, sans-serif;
+}
