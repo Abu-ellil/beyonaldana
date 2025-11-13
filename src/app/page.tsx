@@ -27,7 +27,7 @@ export default async function Home() {
       </header>
 
       <main className="mx-auto max-w-5xl px-6 py-8">
-        <h2 className="text-2xl font-bold mb-24 text-black">Upcoming Events</h2>
+        <h2 className="text-2xl font-bold mb-24 text-black">UPCOMING EVENTS</h2>
         {events.length === 0 ? (
           <p className="text-gray-600">No events yet. Add some from the admin page.</p>
         ) : (
@@ -35,7 +35,7 @@ export default async function Home() {
             {events.map((e) => (
               <div key={e._id} className="bg-white h-42 rounded-lg shadow-2xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden flex ">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={e.image} alt={e.name} className="h-44 w-28 object-cover hover:scale-105 transition-transform duration-300" />
+                <img src={e.image} alt={e.name} className="h-44 w-32 object- hover:scale-105 transition-transform duration-300" />
                 <div className="w-full gap-4 p-4 flex flex-col items-center justify-center ">
                   <h3 className="text-gray-800">{e.name}</h3>
                   <p className="text-md font-semibold text-slate-900">
