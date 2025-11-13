@@ -1,7 +1,6 @@
 import { adminLogin, addEvent, editEvent, removeEvent } from "@/lib/actions";
 import { getEvents } from "@/lib/events";
 import { cookies } from "next/headers";
-import type { EventItem } from "@/lib/types";
 
 export default async function AdminPage() {
   const cookieStore = await cookies();
@@ -37,14 +36,14 @@ export default async function AdminPage() {
         {/* Add Event Form */}
         <div className="mb-6 sm:mb-8">
           <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-slate-900">Add New Event</h2>
-          <form action={addEvent} className="bg-white p-4 sm:p-6 rounded shadow space-y-4">
+          <form action={addEvent} encType="multipart/form-data" className="bg-white p-4 sm:p-6 rounded shadow space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-900">Name</label>
               <input name="name" className="w-full border rounded px-3 py-2 text-slate-900" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-900">Image URL</label>
-              <input name="image" className="w-full border rounded px-3 py-2 text-slate-900" required />
+              <label className="block text-sm font-medium text-slate-900">Image File</label>
+              <input type="file" name="image" accept="image/*" className="w-full border rounded px-3 py-2 text-slate-900" required />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-900">Date</label>

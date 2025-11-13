@@ -3,6 +3,13 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createEvent, updateEvent, deleteEvent } from "./events";
 import { getDb } from "./mongodb";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function adminLogin(formData: FormData) {
   const pass = formData.get("passcode")?.toString() || "";
@@ -29,16 +36,35 @@ export async function addEvent(formData: FormData) {
   }
 
   const name = formData.get("name")?.toString() || "";
-  const image = formData.get("image")?.toString() || "";
+  const imageFile = formData.get("image") as File | null;
   const date = formData.get("date")?.toString() || "";
   const link = formData.get("link")?.toString() || undefined;
 
-  if (!name || !image || !date) {
+  if (!name || !imageFile || !date) {
     console.error("Name, image and date are required");
     return;
   }
 
-  await createEvent({ name, image, date, link });
+  let imageUrl = "";
+  try {
+    const arrayBuffer = await imageFile.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const uploadResult = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { resource_type: 'image' },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(buffer);
+    });
+    imageUrl = (uploadResult as { secure_url: string }).secure_url;
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    return;
+  }
+
+  await createEvent({ name, image: imageUrl, date, link });
   revalidatePath("/");
   revalidatePath("/admin");
 }

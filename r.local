@@ -1,0 +1,5 @@
+MONGODB_URI=mongodb+srv://mrabuellil_db_user:mrabuellil_db_user@cluster0.j5rot1o.mongodb.net/al-dana-clone?retryWrites=true&w=majority
+ADMIN_PASSCODE=112233
+CLOUDINARY_CLOUD_NAME=masoft
+CLOUDINARY_API_KEY=657846754332939
+CLOUDINARY_API_SECRET=Jsg7AiP68YfIr74PmFwIP7T5YF8
